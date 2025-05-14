@@ -51,7 +51,7 @@
     "branches": [
       "main"
     ],
-    "repositoryUrl": "https://github.com/eduardoconti/semantic-release-example.git",
+    "repositoryUrl": "https://github.com/rygrams/nextjs-shadcn-ai.git",
     "plugins": [
       "@semantic-release/commit-analyzer",
       "@semantic-release/release-notes-generator",
