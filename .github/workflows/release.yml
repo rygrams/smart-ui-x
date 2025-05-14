@@ -1,25 +1,30 @@
 name: Release
 
 on:
-  pull_request:
-    types: [closed]
+  push:
+    branches:
+      - main
+      - master
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 jobs:
-  build:
+  release:
+    name: Release
     runs-on: ubuntu-latest
-
-    if: github.event.pull_request.merged
-
     steps:
-      - name: Tag
-        uses: K-Phoen/semver-release-action@master
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v3
         with:
-          release_branch: main
-          release_strategy: release
-          tag_format: "v%major%.%minor%.%patch%"
+          node-version: 20
+
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.SHADAI_GITHUB_TOKEN }}
