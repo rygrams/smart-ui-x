@@ -27,6 +27,7 @@
     "zod": "^3.24.4"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.29.4",
     "@eslint/eslintrc": "^3",
     "@prisma/client": "^6.7.0",
     "@tailwindcss/postcss": "^4",
