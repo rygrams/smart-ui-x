@@ -41,13 +41,7 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
-      - name: Create Release Pull Request
-        uses: changesets/action@v1
-        with:
-          commit: "chore(release): version packages"
-          title: "chore(release): version packages"
-          version: node .github/changeset-version.js
-          publish: npx changeset publish
+      - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.SHADAI_GITHUB_TOKEN }}
-          NODE_ENV: "production"
+        run: pnpm semantic-release
