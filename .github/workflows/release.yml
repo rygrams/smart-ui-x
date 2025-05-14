@@ -23,26 +23,3 @@ jobs:
           tag_format: "v%major%.%minor%.%patch%"
         env:
           GITHUB_TOKEN: ${{ secrets.SHADAI_GITHUB_TOKEN }}
-
-      - name: Update package.json version
-        run: |
-          VERSION="${{ steps.semver.outputs.tag }}"
-          echo "Updating package.json to version $VERSION"
-          npm version "$VERSION" --no-git-tag-version
-
-      - name: Commit and push changes
-        run: |
-          git add package.json package-lock.json
-          git commit -m "chore: release ${{ steps.semver.outputs.tag }}"
-          git push origin ${{ github.event.repository.default_branch }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.SHADAI_GITHUB_TOKEN }}
-
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ steps.semver.outputs.tag }}
-          name: Release ${{ steps.semver.outputs.tag }}
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.SHADAI_GITHUB_TOKEN }}
