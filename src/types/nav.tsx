@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 import { Icons } from '~/components/app/icons'
 
 export interface NavItem {
