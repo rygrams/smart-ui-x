@@ -34,7 +34,7 @@ jobs:
           cache: 'pnpm'
       
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
       
       - name: Verify the integrity of provenance attestations and registry signatures
         run: pnpm audit signatures
