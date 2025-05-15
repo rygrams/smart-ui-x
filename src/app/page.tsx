@@ -1,3 +1,13 @@
+import Link from 'next/link'
+import { Announcement } from '~/components/app/announcement'
+import { CircleDecorator } from '~/components/app/circle-decorator'
+import {
+  HorizontalLineDecorator,
+  VerticalLineDecorator,
+} from '~/components/app/line-decorator'
+import { StarGitHubButton } from '~/components/app/star-github-button'
+import { Button } from '~/components/ui/button'
+
 export default function HomePage() {
   return (
     <div className="container">
@@ -5,7 +15,7 @@ export default function HomePage() {
         <div className="flex items-center justify-center py-6 md:hidden">
           <Announcement />
         </div>
-        {/* <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center">
           <div className="relative hidden min-w-[28rem] items-center justify-center p-8 md:flex">
             <VerticalLineDecorator
               lineFadeStop={50}
@@ -17,8 +27,8 @@ export default function HomePage() {
               className="absolute right-0 [animation-duration:0.5s]"
             />
           </div>
-        </div> */}
-        {/* <section className="relative text-center">
+        </div>
+        <section className="relative text-center">
           <HorizontalLineDecorator
             lineOffset={150}
             className="absolute -top-px"
@@ -29,8 +39,8 @@ export default function HomePage() {
             className="absolute -left-px"
           />
           <div className="relative z-10 flex items-center justify-center bg-background p-8">
-            <h1 className="text-balance bg-gradient-to-b from-foreground to-muted-foreground bg-clip-text text-4xl font-bold leading-tight tracking-tighter text-transparent sm:text-5xl md:text-7xl lg:leading-[1.1]">
-              Supercharge your component library
+            <h1 className="text-balance bg-gradient-to-b from-foreground to-muted-foreground bg-clip-text text-4xl font-bold leading-tight tracking-tighter text-transparent sm:text-4xl md:text-6xl lg:leading-[1.1]">
+              Supercharge your component with AI
             </h1>
             <HorizontalLineDecorator
               lineOffset={150}
@@ -40,8 +50,9 @@ export default function HomePage() {
           <div className="relative z-10 flex items-center justify-center bg-background p-8">
             <p className="max-w-screen-md text-balance text-sm font-light text-muted-foreground md:text-lg">
               <span className="font-medium text-foreground">Additional</span>{' '}
-              beautifully designed components that you can copy and paste into
-              your apps. Accessible. Customizable. Open Source.
+              beautifully designed components powered by AI that you can copy
+              and paste into your apps. Accessible. Customizable. Open Source.
+              Make your app more Smart and Intelligent.
             </p>
             <HorizontalLineDecorator
               lineOffset={150}
@@ -76,7 +87,7 @@ export default function HomePage() {
             lineOffset={150}
             className="absolute -right-px"
           />
-        </section> */}
+        </section>
       </div>
     </div>
   )

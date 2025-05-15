@@ -13,11 +13,11 @@ export function AppFooter() {
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
             >
-              junwen-k
+              rygrams
             </a>{' '}
             based on{' '}
             <a
-              href={appConfig.links.githubShadcnUi}
+              href={appConfig.links.linkedIn}
               target="_blank"
               rel="noreferrer"
               className="font-medium underline underline-offset-4"
