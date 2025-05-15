@@ -30,9 +30,7 @@ export async function StarGitHubButton({
       owner: 'rygrams',
       repo: 'smart-ui-x',
     }))
-  } catch {
-    //
-  }
+  } catch {}
 
   return (
     <Button asChild className={cn('group', className)} {...props}>
