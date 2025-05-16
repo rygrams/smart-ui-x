@@ -1,6 +1,12 @@
 import Link from 'next/link'
 import { cn } from '~/lib/utils'
 import { registryDemoComponents } from '~/registry/registry-demo'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '../ui/accordion'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const docsYamlComponents: Record<string, React.ComponentType<any>> = {
@@ -93,8 +99,8 @@ export const docsYamlComponents: Record<string, React.ComponentType<any>> = {
     // eslint-disable-next-line @next/next/no-img-element
     <img className={cn('rounded-md', className)} alt={alt} {...props} />
   ),
-  hr: ({ ...props }: React.HTMLAttributes<HTMLHRElement>) => (
-    <hr className="my-4 md:my-8" {...props} />
+  hr: ({ className, ...props }: React.HTMLAttributes<HTMLHRElement>) => (
+    <hr className={cn('my-4 w-full', className)} {...props} />
   ),
   table: ({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
     <div className="my-6 w-full overflow-y-auto">
@@ -149,7 +155,7 @@ export const docsYamlComponents: Record<string, React.ComponentType<any>> = {
   section: ({ className, ...props }: React.HTMLAttributes<HTMLElement>) => (
     <section
       className={cn(
-        'relative z-10 flex items-center justify-center bg-background',
+        'relative z-10 flex flex-col items-start justify-start bg-background',
         className,
       )}
       {...props}
@@ -164,6 +170,10 @@ export const docsYamlComponents: Record<string, React.ComponentType<any>> = {
       {...props}
     />
   ),
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
   ...registryDemoComponents,
 }
 

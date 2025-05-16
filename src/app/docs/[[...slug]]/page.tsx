@@ -19,7 +19,7 @@ export async function generateMetadata({
   params,
 }: DocPageProps): Promise<Metadata> {
   const { slug } = await params
-  const doc = await getDoc(slug.join('.'))
+  const doc = await getDoc(slug.join('/'))
 
   if (!doc) {
     return {}
@@ -58,8 +58,7 @@ export default async function DocPage({ params }: DocPageProps) {
   if (!slug) {
     return redirect('/docs/installation')
   }
-  const doc = await getDoc(slug.join('.'))
-  console.log('doc', doc)
+  const doc = await getDoc(slug.join('/'))
 
   if (slug.length !== 0 && !doc) {
     notFound()

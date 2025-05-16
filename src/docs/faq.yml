@@ -1,0 +1,40 @@
+id: faq
+title: FAQ
+description: Questions fréquemment posées.
+components:
+  - id: faq-section
+    type: section
+    children:
+      - id: accessibility-question
+        type: Accordion
+        className: "w-full"
+        children:
+          - id: item-accessibility
+            type: AccordionItem 
+            customProps:
+              value: item-1
+            children:
+              - type: AccordionTrigger
+                content: Est-ce accessible ?
+              - type: AccordionContent
+                content: Oui. Il respecte les normes d'accessibilité WAI-ARIA.
+
+          - id: item-styling
+            type: AccordionItem
+            customProps:
+              value: item-2
+            children:
+              - type: AccordionTrigger
+                content: Est-ce stylé ?
+              - type: AccordionContent 
+                content: Oui. Il est livré avec des styles par défaut qui correspondent à l'esthétique des autres composants.
+          
+          - id: item-animation
+            type: AccordionItem
+            customProps:
+              value: item-3
+            children:
+              - type: AccordionTrigger
+                content: Est-ce animé ?
+              - type: AccordionContent
+                content: Oui. Il est animé par défaut, mais vous pouvez le désactiver si vous préférez.

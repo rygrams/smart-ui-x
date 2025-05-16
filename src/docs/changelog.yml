@@ -1,0 +1,23 @@
+id: changelog
+title: Changelog
+description: Latest updates and announcements.
+next:
+  - id: getting-started
+    title: Getting Started
+    description: A quick start guide to using Shadcn.
+previous:
+  - id: introduction
+    title: Introduction
+    description: An overview of Shadcn and its features.
+components:
+  - id: changelog-thank-you
+    type : section
+    children:
+      - type: h4
+        content: >
+          01-05-2025 - Project Startup
+      - type: hr
+      - type: div
+        content: >
+          Project initialization with Next.js and Shadcn UI. Setting up the basic project structure 
+          and core dependencies. Thank you to everyone who has supported this initiative 🙏

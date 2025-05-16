@@ -36,7 +36,11 @@ export function componentsRenderer(component: DocElement): React.ReactNode {
 
   if (component.content) {
     return (
-      <Component key={component.id || component.type}>
+      <Component
+        key={component.id || component.type}
+        {...component.customProps}
+        className={component.className}
+      >
         <ContentFormatter>{component.content}</ContentFormatter>
       </Component>
     )
@@ -44,7 +48,11 @@ export function componentsRenderer(component: DocElement): React.ReactNode {
 
   if (component.children && Array.isArray(component.children)) {
     return (
-      <Component key={component.id || component.type}>
+      <Component
+        key={component.id || component.type}
+        {...component.customProps}
+        className={component.className}
+      >
         {component.children.map((child, index) => (
           <React.Fragment key={child.id || `${component.type}-child-${index}`}>
             {componentsRenderer(child)}
@@ -54,5 +62,11 @@ export function componentsRenderer(component: DocElement): React.ReactNode {
     )
   }
 
-  return <Component key={component.id || component.type} />
+  return (
+    <Component
+      key={component.id || component.type}
+      {...component.customProps}
+      className={component.className}
+    />
+  )
 }
