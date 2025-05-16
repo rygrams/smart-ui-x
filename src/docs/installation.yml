@@ -1,0 +1,21 @@
+id: installation
+title: Installation
+description: How to install dependencies and structure your app.
+next:
+  - id: getting-started
+    title: Getting Started
+    description: A quick start guide to using Shadcn.
+previous:
+  - id: introduction
+    title: Introduction
+    description: An overview of Shadcn and its features.
+components:
+  - id: installation-guide
+    type : section
+    children:
+      - type: div
+        content: >
+          For installation instructions and setting up dependencies, please refer to the 
+          official Shadcn [installation guide](https://ui.shadcn.com/docs/installation). 
+          This guide provides the most up-to-date information for structuring your app 
+          and ensuring compatibility.
