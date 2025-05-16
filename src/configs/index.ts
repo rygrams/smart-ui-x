@@ -1,5 +1,5 @@
 export const appConfig = {
-  name: 'Smart/UI',
+  name: 'smart/ui-x',
   url: 'https://smart-ui-x.vercel.app/',
   ogImage: '',
   description:

@@ -1,4 +1,4 @@
-import { notFound, redirect } from 'next/navigation'
+import { notFound } from 'next/navigation'
 
 import type { Metadata } from 'next'
 import { ChevronRight } from 'lucide-react'
@@ -8,6 +8,7 @@ import { getDoc } from '~/lib/doc'
 import { appConfig } from '~/configs'
 import { DocPager } from '~/components/app/doc-pager'
 import { TableOfContentsNav } from '~/components/app/table-of-content'
+import { Doc } from '~/types/doc'
 
 interface DocPageProps {
   params: Promise<{
@@ -18,12 +19,7 @@ interface DocPageProps {
 export async function generateMetadata({
   params,
 }: DocPageProps): Promise<Metadata> {
-  const { slug } = await params
-  const doc = await getDoc(slug.join('/'))
-
-  if (!doc) {
-    return {}
-  }
+  const doc = await getDocFromParams({ params })
 
   return {
     title: doc.title,
@@ -53,16 +49,7 @@ export async function generateMetadata({
 }
 
 export default async function DocPage({ params }: DocPageProps) {
-  const { slug } = await params
-
-  if (!slug) {
-    return redirect('/docs/installation')
-  }
-  const doc = await getDoc(slug.join('/'))
-
-  if (slug.length !== 0 && !doc) {
-    notFound()
-  }
+  const doc = await getDocFromParams({ params })
 
   return (
     <main className="relative py-6 lg:gap-10 lg:py-8 xl:grid xl:grid-cols-[1fr_300px]">
@@ -95,4 +82,18 @@ export default async function DocPage({ params }: DocPageProps) {
       </div>
     </main>
   )
+}
+
+async function getDocFromParams({ params }: DocPageProps) {
+  const { slug } = await params
+  let doc: Doc | null = null
+
+  if (!slug) doc = await getDoc('introduction')
+  else doc = await getDoc(slug.join('/'))
+
+  if (slug && slug.length !== 0 && !doc) {
+    notFound()
+  }
+
+  return doc
 }

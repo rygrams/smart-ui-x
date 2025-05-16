@@ -30,7 +30,6 @@ export function componentsRenderer(component: DocElement): React.ReactNode {
   const Component = docsYamlComponents[component.type]
 
   if (!Component) {
-    console.warn(`Component type "${component.type}" not found`)
     return null
   }
 
@@ -38,6 +37,7 @@ export function componentsRenderer(component: DocElement): React.ReactNode {
     return (
       <Component
         key={component.id || component.type}
+        id={component.id}
         {...component.customProps}
         className={component.className}
       >
@@ -50,6 +50,7 @@ export function componentsRenderer(component: DocElement): React.ReactNode {
     return (
       <Component
         key={component.id || component.type}
+        id={component.id}
         {...component.customProps}
         className={component.className}
       >
@@ -64,6 +65,7 @@ export function componentsRenderer(component: DocElement): React.ReactNode {
 
   return (
     <Component
+      id={component.id}
       key={component.id || component.type}
       {...component.customProps}
       className={component.className}

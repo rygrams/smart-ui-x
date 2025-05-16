@@ -1,6 +1,8 @@
-id: changelog
-title: Changelog
-description: Latest updates and announcements.
+id: introduction
+title: Introduction
+description: >
+  Additional AI powered Shadcn components that you can copy and paste into your apps. 
+  Use these components to make your app more smart and improve User eXperience.
 next:
   - id: getting-started
     title: Getting Started
@@ -10,14 +12,74 @@ previous:
     title: Introduction
     description: An overview of Shadcn and its features.
 components:
-  - id: changelog-thank-you
+  - id: info1
+    type: p
+    content: >
+      Similar to shadcn/ui, this is **NOT** a component library. It's a collection of 
+      re-usable AI based components that you can copy and paste into your apps.
+  - id: info2
+    type: p
+    content: >
+      As smart/ui-x is an extension of shadcn/ui, most documentation remains applicable. 
+      For more information, please visit shadcn/ui's [documentation](https://ui.shadcn.com/docs).
+  - id: philosophy
     type : section
     children:
-      - type: h4
+      - type: h3
         content: >
-          01-05-2025 - Project Startup
+          Philosophy
       - type: hr
       - type: div
         content: >
-          Project initialization with Next.js and Shadcn UI. Setting up the basic project structure 
-          and core dependencies. Thank you to everyone who has supported this initiative 🙏
+          This AI component is built to feel like a natural extension of the ShadCN 
+          and Radix UI ecosystem—clean, consistent, and composable. Its API is intentionally 
+          minimal yet expressive, offering powerful defaults while staying flexible.
+          Designed with both developers and end-users in mind, it enhances the user experience 
+          through intuitive interactions, thoughtful accessibility, and seamless visual 
+          integration. The result is an AI interface that works effortlessly, looks native, 
+          and scales beautifully.
+  - id: faq-section
+    type: section
+    children:
+      - type: h3
+        content: >
+          FAQ
+      - type: hr
+      - id: accessibility-question
+        type: Accordion
+        className: "w-full"
+        children:
+          - id: item-accessibility
+            type: AccordionItem 
+            customProps:
+              value: item-1
+            children:
+              - type: AccordionTrigger
+                content: Does it feel native to shadcn/ui ?
+              - type: AccordionContent
+                content: It’s designed to follow the same API patterns and styling conventions as ShadCN, so it plugs in seamlessly with your existing UI setup.
+
+          - id: item-styling
+            type: AccordionItem
+            customProps:
+              value: item-2
+            children:
+              - type: AccordionTrigger
+                content: What enhances the AI experience ?
+              - type: AccordionContent 
+                content: We use the [Xtartapp AI](https://xtartapp.com) API under the hood to deliver smarter responses and a more refined user experience out of the box.
+          
+          - id: item-animation
+            type: AccordionItem
+            customProps:
+              value: item-3
+            children:
+              - type: AccordionTrigger
+                content: Can I customize the behavior or appearance of the component?
+              - type: AccordionContent
+                content: Yes, the component is fully composable and supports props, slots, and event handlers—so you can adapt it to any use case or design system.
+tableOfContents:
+  - sectionId: philosophy
+    title: Philosophy
+  - sectionId: faq-section
+    title: FAQ
