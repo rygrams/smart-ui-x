@@ -18,8 +18,7 @@ export type DocElement = {
   id?: string
   type: string
   className?: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  customProps?: Record<string, any>
+  customProps?: Record<string, number | string | boolean>
   content?: string
   children?: DocElement[]
 }
