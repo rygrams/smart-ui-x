@@ -91,9 +91,7 @@ async function getDocFromParams({ params }: DocPageProps) {
   if (!slug) doc = await getDoc('introduction')
   else doc = await getDoc(slug.join('/'))
 
-  if (slug && slug.length !== 0 && !doc) {
-    notFound()
-  }
+  if (slug && slug.length !== 0 && !doc) notFound()
 
   return doc
 }
