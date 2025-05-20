@@ -162,129 +162,14 @@ export const docsYamlComponents: Record<string, React.ComponentType<any>> = {
     />
   ),
   div: ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-    <div
-      className={cn(
-        'relative z-10 flex items-center justify-center bg-background',
-        className,
-      )}
-      {...props}
-    />
+    <div className={cn(className)} {...props} />
+  ),
+  span: ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
+    <span className={cn(className)} {...props} />
   ),
   Accordion,
   AccordionItem,
   AccordionTrigger,
   AccordionContent,
   ...registryDemoComponents,
-}
-
-const processLink = (
-  text: string,
-  props: React.HTMLAttributes<HTMLElement>,
-) => {
-  if (!text) return text
-
-  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g
-
-  if (linkRegex.test(text)) {
-    const parts: React.ReactNode[] = []
-    let lastIndex = 0
-    let match
-
-    linkRegex.lastIndex = 0
-
-    while ((match = linkRegex.exec(text)) !== null) {
-      const [fullMatch, linkText, linkUrl] = match
-      const matchIndex = match.index
-
-      if (matchIndex > lastIndex) {
-        parts.push(text.substring(lastIndex, matchIndex))
-      }
-
-      parts.push(
-        <a
-          key={linkUrl}
-          href={linkUrl}
-          className={cn('font-medium underline underline-offset-4')}
-          {...props}
-        >
-          {linkText}
-        </a>,
-      )
-
-      lastIndex = matchIndex + fullMatch.length
-    }
-
-    if (lastIndex < text.length) {
-      parts.push(text.substring(lastIndex))
-    }
-
-    return <>{parts}</>
-  }
-
-  return text
-}
-
-const processBoldText = (text: string) => {
-  if (!text) return text
-
-  const boldRegex = /\*\*([^*]+)\*\*/g
-
-  if (boldRegex.test(text)) {
-    const parts: React.ReactNode[] = []
-    let lastIndex = 0
-    let match
-
-    boldRegex.lastIndex = 0
-
-    while ((match = boldRegex.exec(text)) !== null) {
-      const [fullMatch, boldText] = match
-      const matchIndex = match.index
-
-      if (matchIndex > lastIndex) {
-        parts.push(text.substring(lastIndex, matchIndex))
-      }
-
-      parts.push(
-        <strong key={matchIndex} className="font-bold">
-          {boldText}
-        </strong>,
-      )
-
-      lastIndex = matchIndex + fullMatch.length
-    }
-
-    if (lastIndex < text.length) {
-      parts.push(text.substring(lastIndex))
-    }
-
-    return <>{parts}</>
-  }
-
-  return text
-}
-
-export function ContentFormatter({
-  className,
-  children,
-  ...props
-}: React.HTMLAttributes<HTMLElement>) {
-  if (typeof children === 'string') {
-    const processedLinks = processLink(children, props)
-    const processedText =
-      typeof processedLinks === 'string'
-        ? processBoldText(processedLinks)
-        : processedLinks
-
-    return (
-      <span className={className} {...props}>
-        {processedText}
-      </span>
-    )
-  }
-
-  return (
-    <span className={className} {...props}>
-      {children}
-    </span>
-  )
 }

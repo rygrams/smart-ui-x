@@ -20,7 +20,7 @@ components:
   - id: info2
     type: p
     content: >
-      As smart/ui-x is an extension of shadcn/ui, most documentation remains applicable. 
+      As smart/ui-x is an extension of **shadcn/ui**, most documentation remains applicable. 
       For more information, please visit shadcn/ui's [documentation](https://ui.shadcn.com/docs).
   - id: philosophy
     type : section

@@ -13,7 +13,7 @@ components:
   - id: installation-guide
     type : section
     children:
-      - type: div
+      - type: span
         content: >
           For installation instructions and setting up dependencies, please refer to the 
           official Shadcn [installation guide](https://ui.shadcn.com/docs/installation). 

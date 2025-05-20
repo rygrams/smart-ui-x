@@ -1,8 +1,9 @@
 import * as React from 'react'
 
 import { DocElement, Doc } from '~/types/doc'
-import { ContentFormatter, docsYamlComponents } from './docs-yaml-components'
+import { docsYamlComponents } from './docs-yaml-components'
 import { cn } from '~/lib/utils'
+import { ContentRender } from './content-render'
 
 interface DocPagerProps {
   doc?: Doc
@@ -28,47 +29,26 @@ export function DocPager({
 
 export function componentsRenderer(component: DocElement): React.ReactNode {
   const Component = docsYamlComponents[component.type]
+  if (!Component) return null
 
-  if (!Component) {
-    return null
-  }
-
-  if (component.content) {
-    return (
-      <Component
-        key={component.id || component.type}
-        id={component.id}
-        {...component.customProps}
-        className={component.className}
-      >
-        <ContentFormatter>{component.content}</ContentFormatter>
-      </Component>
-    )
-  }
-
-  if (component.children && Array.isArray(component.children)) {
-    return (
-      <Component
-        key={component.id || component.type}
-        id={component.id}
-        {...component.customProps}
-        className={component.className}
-      >
-        {component.children.map((child, index) => (
-          <React.Fragment key={child.id || `${component.type}-child-${index}`}>
-            {componentsRenderer(child)}
-          </React.Fragment>
-        ))}
-      </Component>
-    )
+  const key = component.id || component.type
+  const props = {
+    id: component.id,
+    ...component.customProps,
+    className: component.className,
   }
 
   return (
-    <Component
-      id={component.id}
-      key={component.id || component.type}
-      {...component.customProps}
-      className={component.className}
-    />
+    <Component key={key} {...props}>
+      {component.content ? (
+        <ContentRender content={component.content} />
+      ) : (
+        component.children?.map((child, i) => (
+          <React.Fragment key={child.id || `${component.type}-${i}`}>
+            {componentsRenderer(child)}
+          </React.Fragment>
+        ))
+      )}
+    </Component>
   )
 }
