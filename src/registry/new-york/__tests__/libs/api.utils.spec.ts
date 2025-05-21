@@ -4,18 +4,22 @@ import { routesMap, getPayload, getResults } from '../../lib/api.utils'
 
 describe('API Utils', () => {
   describe('routesMap', () => {
-    it('should contain correct route for text-suggestions', () => {
-      expect(routesMap['text-suggestions']).toBe('text/suggestions')
+    it('should contain correct route for text suggestions', () => {
+      expect(routesMap['suggestions']).toBe('text/suggestions')
     })
 
-    it('should contain correct route for text-correction', () => {
-      expect(routesMap['text-correction']).toBe('text/correction')
+    it('should contain correct route for text correction', () => {
+      expect(routesMap['correction']).toBe('text/correction')
+    })
+
+    it('should contain correct route for text normalization', () => {
+      expect(routesMap['normalization']).toBe('text/normalization')
     })
   })
 
   describe('getPayload', () => {
-    it('should return correct payload function for text-suggestions', () => {
-      const textSuggestionsPayload = getPayload('text-suggestions')
+    it('should return correct payload function for text suggestions', () => {
+      const textSuggestionsPayload = getPayload('suggestions')
       const payload = textSuggestionsPayload('Hello world', 'Test context')
 
       expect(payload).toEqual({
@@ -25,8 +29,8 @@ describe('API Utils', () => {
       })
     })
 
-    it('should return correct payload function for text-correction', () => {
-      const textCorrectionPayload = getPayload('text-correction')
+    it('should return correct payload function for text correction', () => {
+      const textCorrectionPayload = getPayload('correction')
       const payload = textCorrectionPayload('Hello world', '')
 
       expect(payload).toEqual({
@@ -37,7 +41,7 @@ describe('API Utils', () => {
   })
 
   describe('getResults', () => {
-    it('should return suggestions array for text-suggestions response', () => {
+    it('should return suggestions array for text suggestions response', () => {
       const mockResponse = {
         data: {
           suggestions: [
@@ -47,26 +51,26 @@ describe('API Utils', () => {
         },
       }
 
-      const resultFunction = getResults('text-suggestions')
+      const resultFunction = getResults('suggestions')
       const results = resultFunction(mockResponse as any)
 
       expect(results).toEqual(['Hello', 'Hi'])
     })
 
-    it('should return empty array for text-suggestions with no data', () => {
+    it('should return empty array for text suggestions with no data', () => {
       const mockResponse = {
         data: {
           suggestions: [],
         },
       }
 
-      const resultFunction = getResults('text-suggestions')
+      const resultFunction = getResults('suggestions')
       const results = resultFunction(mockResponse as any)
 
       expect(results).toEqual([])
     })
 
-    it('should return corrected text for text-correction response', () => {
+    it('should return corrected text for text correction response', () => {
       const mockResponse = {
         data: {
           originalText: 'Hello wrld',
@@ -74,13 +78,13 @@ describe('API Utils', () => {
         },
       }
 
-      const resultFunction = getResults('text-correction')
+      const resultFunction = getResults('correction')
       const result = resultFunction(mockResponse as any)
 
       expect(result).toBe('Hello world')
     })
 
-    it('should return empty string for text-correction with no data', () => {
+    it('should return empty string for text correction with no data', () => {
       const mockResponse = {
         data: {
           originalText: '',
@@ -88,7 +92,7 @@ describe('API Utils', () => {
         },
       }
 
-      const resultFunction = getResults('text-correction')
+      const resultFunction = getResults('correction')
       const result = resultFunction(mockResponse as any)
 
       expect(result).toBe('')

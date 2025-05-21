@@ -1,31 +1,40 @@
-export type TaskEnpoints = 'text-suggestions' | 'text-correction'
+export type TaskEnpoints = 'suggestions' | 'correction' | 'normalization'
 
 /*  API ENDPOINTS UTILS   */
 export const routesMap = {
-  'text-suggestions': 'text/suggestions',
-  'text-correction': 'text/correction',
+  suggestions: 'text/suggestions',
+  correction: 'text/correction',
+  normalization: 'text/normalization',
 }
 
 export const getPayload = (task: TaskEnpoints) =>
   ({
-    'text-suggestions': (text: string, context: string) => ({
+    suggestions: (text: string, context: string) => ({
       text,
       context,
       language: 'auto',
     }),
-    'text-correction': (text: string) => ({
+    correction: (text: string) => ({
       text,
+      language: 'auto',
+    }),
+    normalization: (text: string) => ({
+      text,
+      context: 'auto',
       language: 'auto',
     }),
   })[task]
 
 export const getResults = (task: TaskEnpoints) => {
   return {
-    'text-suggestions': (response: SuggestionResponse) => {
+    suggestions: (response: SuggestionResponse) => {
       return response.data?.suggestions.map((item) => item.suggestion) || []
     },
-    'text-correction': (response: CorrectionResponse) => {
+    correction: (response: CorrectionResponse) => {
       return response.data?.correctedText || ''
+    },
+    normalization: (response: NormalizationResponse) => {
+      return response.data?.normalizedText || ''
     },
   }[task]
 }
@@ -44,5 +53,11 @@ type CorrectionResponse = {
   data: {
     originalText: string
     correctedText: string
+  }
+}
+
+type NormalizationResponse = {
+  data: {
+    normalizedText: string
   }
 }
