@@ -1,0 +1,22 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "smartui-nextjs",
+  "type": "registry:component",
+  "title": "Setup Smart UI Next.js",
+  "description": "Setup AI utilities and AI endpoints for Next.js",
+  "dependencies": [],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/registry/new-york/lib/nextjs/route.ts",
+      "content": "import {\n  getPayload,\n  getResults,\n  routesMap,\n  TaskEnpoints,\n} from '@/registry/new-york/lib/api.utils'\n\nexport async function POST(\n  req: Request,\n  { params }: { params: Promise<{ taskId: TaskEnpoints }> },\n) {\n  const taskId = (await params).taskId\n  const body = await req.json()\n  const payload = getPayload(taskId)(body.input, body.context)\n\n  const res = await fetch(`https://api.xtartapp.com/${routesMap[taskId]}`, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n      Authorization: `Bearer ${process.env.XTARTAPP_API_KEY || ''}`,\n    },\n    body: JSON.stringify(payload),\n  })\n  const data = await res.json()\n  console.log('results', getResults(taskId)(data))\n\n  return Response.json({ data: getResults(taskId)(data) })\n}\n",
+      "type": "registry:page",
+      "target": "app/api/xtartapp/[taskId]/route.ts"
+    },
+    {
+      "path": "src/registry/new-york/lib/api.utils.ts",
+      "content": "export type TaskEnpoints = 'text-suggestions'\n\ntype SuggestionResponse = {\n  data: {\n    suggestions: Suggestion[]\n  }\n}\n\ntype Suggestion = {\n  suggestion: string\n  score: number\n}\n\nexport const routesMap = {\n  'text-suggestions': 'text/suggestions',\n}\n\nexport const getPayload = (task: TaskEnpoints) =>\n  ({\n    'text-suggestions': (text: string, context: string) =>\n      suggestionToPayload(text, context),\n  })[task]\n\nexport const getResults = (task: TaskEnpoints) => {\n  return {\n    'text-suggestions': (response: SuggestionResponse) => {\n      return (\n        response.data?.suggestions.map((item: Suggestion) => item.suggestion) ||\n        []\n      )\n    },\n  }[task]\n}\n\ntype SuggestionPayload = {\n  text: string\n  intent: string\n}\n\nfunction suggestionToPayload(\n  text: string,\n  context: string,\n): {\n  text: string\n  intent: string\n} {\n  return {\n    text,\n    intent: context,\n    language: 'auto',\n  } as SuggestionPayload\n}\n",
+      "type": "registry:lib"
+    }
+  ]
+}
