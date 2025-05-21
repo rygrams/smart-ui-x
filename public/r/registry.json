@@ -1,27 +1,33 @@
 {
-  "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "smart-ui-x",
-  "homepage": "smart-ui-x.vercel.app",
-  "dependencies": [],
-  "items": [
-    {
-      "name": "smartui-nextjs",
-      "type": "registry:component",
-      "title": "Setup Smart UI Next.js",
-      "description": "Setup AI utilities and AI endpoints for Next.js",
-      "registryDependencies": [],
-      "dependencies": [],
-      "files": [
-        {
-          "path": "src/registry/new-york/lib/nextjs/route.ts",
-          "type": "registry:page",
-          "target": "app/api/xtartapp/[taskId]/route.ts"
-        },
-        {
-          "path": "src/registry/new-york/lib/api.utils.ts",
-          "type": "registry:lib"
-        }
-      ]
-    }
-  ]
+   "$schema": "https://ui.shadcn.com/schema/registry.json",
+   "name": "smart-ui-x",
+   "homepage": "smart-ui-x.vercel.app",
+   "dependencies": [],
+   "items": [
+      {
+         "name": "smartui-nextjs",
+         "type": "registry:component",
+         "title": "Setup Smart UI Next.js",
+         "description": "Setup AI utilities and AI endpoints for Next.js",
+         "registryDependencies": [],
+         "dependencies": [
+            "swr"
+         ],
+         "files": [
+            {
+               "path": "src/registry/new-york/lib/nextjs/route.ts",
+               "type": "registry:page",
+               "target": "app/api/xtartapp/[taskId]/route.ts"
+            },
+            {
+               "path": "src/registry/new-york/lib/api.utils.ts",
+               "type": "registry:lib"
+            },
+            {
+               "path": "src/registry/new-york/lib/api.hook.ts",
+               "type": "registry:hook"
+            }
+         ]
+      }
+   ]
 }
