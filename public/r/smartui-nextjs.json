@@ -1,29 +1,27 @@
 {
-   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
-   "name": "smartui-nextjs",
-   "type": "registry:component",
-   "title": "Setup Smart UI Next.js",
-   "description": "Setup AI utilities and AI endpoints for Next.js",
-   "dependencies": [
-      "swr"
-   ],
-   "registryDependencies": [],
-   "files": [
-      {
-         "path": "src/registry/new-york/lib/nextjs/route.ts",
-         "content": "import {\n  getPayload,\n  getResults,\n  routesMap,\n  TaskEnpoints,\n} from '@/registry/new-york/lib/api.utils'\n\nexport async function POST(\n  req: Request,\n  { params }: { params: Promise<{ taskId: TaskEnpoints }> },\n) {\n  const taskId = (await params).taskId\n  const body = await req.json()\n  const payload = getPayload(taskId)(body.input, body.context)\n\n  const res = await fetch(`https://api.xtartapp.com/${routesMap[taskId]}`, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n      Authorization: `Bearer ${process.env.XTARTAPP_API_KEY || ''}`,\n    },\n    body: JSON.stringify(payload),\n  })\n  const data = await res.json()\n\n  return Response.json({ data: getResults(taskId)(data) })\n}\n",
-         "type": "registry:page",
-         "target": "app/api/xtartapp/[taskId]/route.ts"
-      },
-      {
-         "path": "src/registry/new-york/lib/api.utils.ts",
-         "content": "export type TaskEnpoints = 'suggestions' | 'correction' | 'normalization'\n\n/*  API ENDPOINTS UTILS   */\nexport const routesMap = {\n  suggestions: 'text/suggestions',\n  correction: 'text/correction',\n  normalization: 'text/normalization',\n}\n\nexport const getPayload = (task: TaskEnpoints) =>\n  ({\n    suggestions: (text: string, context: string) => ({\n      text,\n      context,\n      language: 'auto',\n    }),\n    correction: (text: string) => ({\n      text,\n      language: 'auto',\n    }),\n    normalization: (text: string) => ({\n      text,\n      context: 'auto',\n      language: 'auto',\n    }),\n  })[task]\n\nexport const getResults = (task: TaskEnpoints) => {\n  return {\n    suggestions: (response: SuggestionResponse) => {\n      return response.data?.suggestions.map((item) => item.suggestion) || []\n    },\n    correction: (response: CorrectionResponse) => {\n      return response.data?.correctedText || ''\n    },\n    normalization: (response: NormalizationResponse) => {\n      return response.data?.normalizedText || ''\n    },\n  }[task]\n}\n\n/*   TYPES   */\ntype SuggestionResponse = {\n  data: {\n    suggestions: {\n      suggestion: string\n      score: number\n    }[]\n  }\n}\n\ntype CorrectionResponse = {\n  data: {\n    originalText: string\n    correctedText: string\n  }\n}\n\ntype NormalizationResponse = {\n  data: {\n    normalizedText: string\n  }\n}\n",
-         "type": "registry:lib"
-      },
-      {
-         "path": "src/registry/new-york/lib/api.hook.ts",
-         "content": "import useSWR from 'swr'\nimport type { TaskEnpoints } from '@/registry/new-york/lib/api.utils'\n\ninterface UseXtartappOptions {\n  taskId: TaskEnpoints\n  input?: string\n  context?: string\n  enabled?: boolean\n}\n\ntype ApiResponse = string | string[]\n\nconst fetcher = async (\n  url: string,\n  { arg }: { arg: { input: string; context?: string } },\n) => {\n  const response = await fetch(url, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(arg),\n  })\n\n  if (!response.ok) throw new Error('La requête a échoué')\n\n  const { data } = await response.json()\n  return data as ApiResponse\n}\n\nexport function useXtartapp({\n  taskId,\n  input = '',\n  context = '',\n}: UseXtartappOptions) {\n  const shouldFetch = input.length > 0\n\n  const { data, error, isLoading, mutate } = useSWR(\n    shouldFetch ? [`/api/xtartapp/${taskId}`, { input, context }] : null,\n    fetcher,\n    {\n      revalidateOnFocus: false,\n      revalidateOnReconnect: false,\n    },\n  )\n\n  return {\n    data,\n    error,\n    isLoading,\n    mutate,\n  }\n}\n",
-         "type": "registry:hook"
-      }
-   ]
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "smartui-nextjs",
+  "type": "registry:component",
+  "title": "Setup Smart UI Next.js",
+  "description": "Setup AI utilities and AI endpoints for Next.js",
+  "dependencies": ["swr"],
+  "registryDependencies": [],
+  "files": [
+    {
+      "path": "src/registry/new-york/lib/nextjs/route.ts",
+      "content": "import {\n  getPayload,\n  getResults,\n  routesMap,\n  TaskEnpoints,\n} from '@/registry/new-york/lib/smartui-api.utils'\n\nexport async function POST(\n  req: Request,\n  { params }: { params: Promise<{ taskId: TaskEnpoints }> },\n) {\n  const taskId = (await params).taskId\n  const body = await req.json()\n  const payload = getPayload(taskId)(body.input, body.context)\n\n  const res = await fetch(`https://api.xtartapp.com/${routesMap[taskId]}`, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n      Authorization: `Bearer ${process.env.XTARTAPP_API_KEY || ''}`,\n    },\n    body: JSON.stringify(payload),\n  })\n  const data = await res.json()\n\n  return Response.json({ data: getResults(taskId)(data) })\n}\n",
+      "type": "registry:page",
+      "target": "app/api/xtartapp/[taskId]/route.ts"
+    },
+    {
+      "path": "src/registry/new-york/lib/smartui-api.utils.ts",
+      "content": "export type TaskEnpoints = 'suggestions' | 'correction' | 'normalization'\n\n/*  API ENDPOINTS UTILS   */\nexport const routesMap = {\n  suggestions: 'text/suggestions',\n  correction: 'text/correction',\n  normalization: 'text/normalization',\n}\n\nexport const getPayload = (task: TaskEnpoints) =>\n  ({\n    suggestions: (text: string, context: string) => ({\n      text,\n      context,\n      language: 'auto',\n    }),\n    correction: (text: string) => ({\n      text,\n      language: 'auto',\n    }),\n    normalization: (text: string) => ({\n      text,\n      context: 'auto',\n      language: 'auto',\n    }),\n  })[task]\n\nexport const getResults = (task: TaskEnpoints) => {\n  return {\n    suggestions: (response: SuggestionResponse) => {\n      return response.data?.suggestions.map((item) => item.suggestion) || []\n    },\n    correction: (response: CorrectionResponse) => {\n      return response.data?.correctedText || ''\n    },\n    normalization: (response: NormalizationResponse) => {\n      return response.data?.normalizedText || ''\n    },\n  }[task]\n}\n\n/*   TYPES   */\ntype SuggestionResponse = {\n  data: {\n    suggestions: {\n      suggestion: string\n      score: number\n    }[]\n  }\n}\n\ntype CorrectionResponse = {\n  data: {\n    originalText: string\n    correctedText: string\n  }\n}\n\ntype NormalizationResponse = {\n  data: {\n    normalizedText: string\n  }\n}\n",
+      "type": "registry:lib"
+    },
+    {
+      "path": "src/registry/new-york/lib/smartui-api.hook.ts",
+      "content": "import useSWR from 'swr'\nimport type { TaskEnpoints } from '~/registry/new-york/lib/smartui-api.utils'\n\ninterface UseXtartappOptions {\n  taskId: TaskEnpoints\n  input?: string\n  context?: string\n  enabled?: boolean\n}\n\ntype ApiResponse = string | string[]\n\nconst fetcher = async (\n  url: string,\n  { arg }: { arg: { input: string; context?: string } },\n) => {\n  const response = await fetch(url, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(arg),\n  })\n\n  if (!response.ok) throw new Error('Request failed')\n\n  const { data } = await response.json()\n  return data as ApiResponse\n}\n\nexport function useXtartapp({\n  taskId,\n  input = '',\n  context = '',\n}: UseXtartappOptions) {\n  const shouldFetch = input.length > 0\n\n  const { data, error, isLoading, mutate } = useSWR(\n    shouldFetch ? [`/api/xtartapp/${taskId}`, { input, context }] : null,\n    fetcher,\n    {\n      revalidateOnFocus: false,\n      revalidateOnReconnect: false,\n    },\n  )\n\n  return {\n    data,\n    error,\n    isLoading,\n    mutate,\n  }\n}\n",
+      "type": "registry:hook"
+    }
+  ]
 }

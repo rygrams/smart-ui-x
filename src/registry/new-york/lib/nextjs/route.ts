@@ -3,7 +3,7 @@ import {
   getResults,
   routesMap,
   TaskEnpoints,
-} from '@/registry/new-york/lib/api.utils'
+} from '@/registry/new-york/lib/smartui-api.utils'
 
 export async function POST(
   req: Request,

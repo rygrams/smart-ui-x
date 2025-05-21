@@ -18,12 +18,26 @@
           "target": "app/api/xtartapp/[taskId]/route.ts"
         },
         {
-          "path": "src/registry/new-york/lib/api.utils.ts",
+          "path": "src/registry/new-york/lib/smartui-api.utils.ts",
           "type": "registry:lib"
         },
         {
-          "path": "src/registry/new-york/lib/api.hook.ts",
+          "path": "src/registry/new-york/lib/smartui-api.hook.ts",
           "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "smartui-dialog",
+      "type": "registry:component",
+      "title": "Smart Dialog",
+      "description": "A smart AI dialog for AI companion",
+      "registryDependencies": ["dialog", "button"],
+      "dependencies": [],
+      "files": [
+        {
+          "path": "src/registry/new-york/blocks/smart-dialog.tsx",
+          "type": "registry:component"
         }
       ]
     }

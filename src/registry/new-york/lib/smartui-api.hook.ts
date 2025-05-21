@@ -1,5 +1,5 @@
 import useSWR from 'swr'
-import type { TaskEnpoints } from '@/registry/new-york/lib/api.utils'
+import type { TaskEnpoints } from '~/registry/new-york/lib/smartui-api.utils'
 
 interface UseXtartappOptions {
   taskId: TaskEnpoints
@@ -20,7 +20,7 @@ const fetcher = async (
     body: JSON.stringify(arg),
   })
 
-  if (!response.ok) throw new Error('La requête a échoué')
+  if (!response.ok) throw new Error('Request failed')
 
   const { data } = await response.json()
   return data as ApiResponse

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "smartui-dialog",
+  "type": "registry:component",
+  "title": "Smart Dialog",
+  "description": "A smart AI dialog for AI companion",
+  "dependencies": [],
+  "registryDependencies": ["dialog", "button"],
+  "files": [
+    {
+      "path": "src/registry/new-york/blocks/smart-dialog.tsx",
+      "content": "import {\n  Dialog,\n  DialogContent,\n  DialogDescription,\n  DialogHeader,\n  DialogTitle,\n  DialogTrigger,\n} from '@/registry/new-york/ui/dialog'\nimport { Button } from '@/registry/new-york/ui/button'\nimport { Icons } from '@/registry/new-york/blocks/smart-icons'\n\nexport function DefaultTrigger() {\n  return (\n    <span className=\"flex items-center gap-1 text-sm\">\n      <Icons.Companion className=\"size-5 text-cyan-600 \" />\n      AI companion\n    </span>\n  )\n}\n\nexport function SmartDialog({ trigger }: { trigger?: React.ReactNode }) {\n  return (\n    <Dialog>\n      <DialogTrigger asChild>\n        <Button\n          variant={'ghost'}\n          className=\"cursor-pointer p-0 h-auto w-auto min-w-2\"\n        >\n          {trigger ?? <DefaultTrigger />}\n        </Button>\n      </DialogTrigger>\n      <DialogContent>\n        <DialogHeader>\n          <DialogTitle>Are you absolutely sure?</DialogTitle>\n          <DialogDescription>\n            This action cannot be undone. This will permanently delete your\n            account and remove your data from our servers.\n          </DialogDescription>\n        </DialogHeader>\n      </DialogContent>\n    </Dialog>\n  )\n}\n\nSmartDialog.displayName = 'SmartDialog'\n",
+      "type": "registry:component"
+    }
+  ]
+}

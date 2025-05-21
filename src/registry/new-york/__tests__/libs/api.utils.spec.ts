@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from 'vitest'
-import { routesMap, getPayload, getResults } from '../../lib/api.utils'
+import { routesMap, getPayload, getResults } from '../../lib/smartui-api.utils'
 
 describe('API Utils', () => {
   describe('routesMap', () => {

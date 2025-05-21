@@ -1,5 +1,4 @@
 import { notFound } from 'next/navigation'
-
 import type { Metadata } from 'next'
 import { ChevronRight } from 'lucide-react'
 import Balancer from 'react-wrap-balancer'
