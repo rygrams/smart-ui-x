@@ -7,29 +7,16 @@ export const Icons = {
   }: React.HTMLAttributes<HTMLOrSVGElement>) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 32 32"
-      className={cn('h-5 w-5', className)}
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
       {...props}
+      className={cn('size-6 text-purple-500', className)}
     >
       <path
-        fill="url(#vscodeIconsFileTypeCodemagic0)"
-        d="m28.62 13.8l-6.87-3.37a.28.28 0 0 1-.19-.19l-3.39-6.87C17.74 2.47 16.87 2 16 2s-1.74.47-2.17 1.37l-3.4 6.87a.3.3 0 0 1-.18.2l-6.88 3.38a2.44 2.44 0 0 0 0 4.39l6.88 3.36c.1.03.15.1.19.18l3.39 6.88c.43.9 1.3 1.37 2.2 1.37a2.4 2.4 0 0 0 2.18-1.37l3.36-6.88c.03-.09.1-.15.19-.18l6.87-3.4a2.44 2.44 0 0 0 0-4.38zm-5.13.49l-3.17 2.77a3.87 3.87 0 0 0-1.25 2.14l-.8 4.14a.33.33 0 0 1-.57.16l-2.76-3.18a3.87 3.87 0 0 0-2.15-1.24l-4.14-.81a.33.33 0 0 1-.15-.56l3.17-2.77a3.87 3.87 0 0 0 1.24-2.14l.81-4.14a.33.33 0 0 1 .56-.16l2.8 3.18c.56.62 1.3 1.08 2.15 1.24l4.14.8c.24.07.34.38.12.57"
-        className="st0"
+        fill="currentColor"
+        d="m20.713 8.128l-.246.566a.506.506 0 0 1-.934 0l-.246-.566a4.36 4.36 0 0 0-2.22-2.25l-.759-.339a.53.53 0 0 1 0-.963l.717-.319a4.37 4.37 0 0 0 2.251-2.326l.253-.611a.506.506 0 0 1 .942 0l.253.61a4.37 4.37 0 0 0 2.25 2.327l.718.32a.53.53 0 0 1 0 .962l-.76.338a4.36 4.36 0 0 0-2.219 2.251M12 4a8 8 0 1 0 7.944 7.045l1.986-.236Q22 11.396 22 12c0 5.523-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2c.861 0 1.699.11 2.498.315L14 4.252A8 8 0 0 0 12 4m1 7h3l-5 7v-5H8l5-7z"
       ></path>
-      <defs>
-        <linearGradient
-          id="vscodeIconsFileTypeCodemagic0"
-          x1={5}
-          x2={95}
-          y1={5}
-          y2={5}
-          gradientTransform="matrix(.31 0 0 .31 .44 .45)"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#d946ef"></stop>
-          <stop offset={1} stopColor="#8b5cf6"></stop>
-        </linearGradient>
-      </defs>
     </svg>
   ),
 }

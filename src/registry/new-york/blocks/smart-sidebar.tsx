@@ -3,7 +3,6 @@
 import * as React from 'react'
 import { Slot } from '@radix-ui/react-slot'
 import { VariantProps, cva } from 'class-variance-authority'
-import { PanelLeftIcon } from 'lucide-react'
 
 import { useIsMobile } from '~/hooks/use-mobile'
 import { cn } from '~/lib/utils'
@@ -24,6 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '~/components/ui/tooltip'
+import { Icons } from './smart-icons'
 
 const SIDEBAR_COOKIE_NAME = 'sidebar_state'
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -32,28 +32,31 @@ const SIDEBAR_WIDTH_MOBILE = '18rem'
 const SIDEBAR_WIDTH_ICON = '3rem'
 const SIDEBAR_KEYBOARD_SHORTCUT = 'b'
 
-type SidebarContextProps = {
+type SmartSidebarContextProps = {
   state: 'expanded' | 'collapsed'
   open: boolean
   setOpen: (open: boolean) => void
   openMobile: boolean
   setOpenMobile: (open: boolean) => void
   isMobile: boolean
-  toggleSidebar: () => void
+  toggleSmartSidebar: () => void
 }
 
-const SidebarContext = React.createContext<SidebarContextProps | null>(null)
+const SmartSidebarContext =
+  React.createContext<SmartSidebarContextProps | null>(null)
 
-function useSidebar() {
-  const context = React.useContext(SidebarContext)
+function useSmartSidebar() {
+  const context = React.useContext(SmartSidebarContext)
   if (!context) {
-    throw new Error('useSidebar must be used within a SidebarProvider.')
+    throw new Error(
+      'useSmartSidebar must be used within a SmartSidebarProvider.',
+    )
   }
 
   return context
 }
 
-function SidebarProvider({
+function SmartSidebarProvider({
   defaultOpen = true,
   open: openProp,
   onOpenChange: setOpenProp,
@@ -89,7 +92,7 @@ function SidebarProvider({
   )
 
   // Helper to toggle the sidebar.
-  const toggleSidebar = React.useCallback(() => {
+  const toggleSmartSidebar = React.useCallback(() => {
     return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open)
   }, [isMobile, setOpen, setOpenMobile])
 
@@ -101,17 +104,17 @@ function SidebarProvider({
         (event.metaKey || event.ctrlKey)
       ) {
         event.preventDefault()
-        toggleSidebar()
+        toggleSmartSidebar()
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [toggleSidebar])
+  }, [toggleSmartSidebar])
 
   const state = open ? 'expanded' : 'collapsed'
 
-  const contextValue = React.useMemo<SidebarContextProps>(
+  const contextValue = React.useMemo<SmartSidebarContextProps>(
     () => ({
       state,
       open,
@@ -119,13 +122,21 @@ function SidebarProvider({
       isMobile,
       openMobile,
       setOpenMobile,
-      toggleSidebar,
+      toggleSmartSidebar,
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar],
+    [
+      state,
+      open,
+      setOpen,
+      isMobile,
+      openMobile,
+      setOpenMobile,
+      toggleSmartSidebar,
+    ],
   )
 
   return (
-    <SidebarContext.Provider value={contextValue}>
+    <SmartSidebarContext.Provider value={contextValue}>
       <TooltipProvider delayDuration={0}>
         <div
           data-slot="sidebar-wrapper"
@@ -145,11 +156,11 @@ function SidebarProvider({
           {children}
         </div>
       </TooltipProvider>
-    </SidebarContext.Provider>
+    </SmartSidebarContext.Provider>
   )
 }
 
-function Sidebar({
+function SmartSidebar({
   side = 'left',
   variant = 'sidebar',
   collapsible = 'offcanvas',
@@ -161,14 +172,15 @@ function Sidebar({
   variant?: 'sidebar' | 'floating' | 'inset'
   collapsible?: 'offcanvas' | 'icon' | 'none'
 }) {
-  const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const { isMobile, state, openMobile, setOpenMobile } = useSmartSidebar()
 
   if (collapsible === 'none') {
     return (
       <div
         data-slot="sidebar"
         className={cn(
-          'bg-sidebar text-sidebar-foreground flex h-full w-(--sidebar-width) flex-col',
+          'bg-sidebar text-sidebar-foreground flex h-full flex-col',
+          side === 'left' ? 'w-(--sidebar-width)' : 'w-(--sidebar-width-icon)',
           className,
         )}
         {...props}
@@ -194,7 +206,7 @@ function Sidebar({
           side={side}
         >
           <SheetHeader className="sr-only">
-            <SheetTitle>Sidebar</SheetTitle>
+            <SheetTitle>SmartSidebar</SheetTitle>
             <SheetDescription>Displays the mobile sidebar.</SheetDescription>
           </SheetHeader>
           <div className="flex h-full w-full flex-col">{children}</div>
@@ -212,22 +224,10 @@ function Sidebar({
       data-side={side}
       data-slot="sidebar"
     >
-      {/* This is what handles the sidebar gap on desktop */}
-      <div
-        data-slot="sidebar-gap"
-        className={cn(
-          'relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear',
-          'group-data-[collapsible=offcanvas]:w-0',
-          'group-data-[side=right]:rotate-180',
-          variant === 'floating' || variant === 'inset'
-            ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]'
-            : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)',
-        )}
-      />
       <div
         data-slot="sidebar-container"
         className={cn(
-          'fixed inset-y-0 z-10 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
+          'fixed inset-y-0 z-50 hidden h-svh w-(--sidebar-width) transition-[left,right,width] duration-200 ease-linear md:flex',
           side === 'left'
             ? 'left-0 group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*-1)]'
             : 'right-0 group-data-[collapsible=offcanvas]:right-[calc(var(--sidebar-width)*-1)]',
@@ -251,12 +251,12 @@ function Sidebar({
   )
 }
 
-function SidebarTrigger({
+function SmartSidebarTrigger({
   className,
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSmartSidebar, open } = useSmartSidebar()
 
   return (
     <Button
@@ -264,32 +264,44 @@ function SidebarTrigger({
       data-slot="sidebar-trigger"
       variant="ghost"
       size="icon"
-      className={cn('size-7', className)}
+      className={cn([
+        'cursor-pointer p-2 h-auto w-auto min-w-2 rounded-full transition-shadow',
+        'border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-md',
+        'bg-linear-to-r from-purple-500 to-violet-500',
+        open && 'invisible',
+        className,
+      ])}
       onClick={(event) => {
         onClick?.(event)
-        toggleSidebar()
+        toggleSmartSidebar()
       }}
       {...props}
     >
-      <PanelLeftIcon />
-      <span className="sr-only">Toggle Sidebar</span>
+      <span className="flex items-center gap-1 text-white dark:text-purple-500">
+        <Icons.Companion className="animate-pulse text-white" />
+        AI Companion
+      </span>
+      <span className="sr-only">Toggle SmartSidebar</span>
     </Button>
   )
 }
 
-function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
-  const { toggleSidebar } = useSidebar()
+function SmartSidebarRail({
+  className,
+  ...props
+}: React.ComponentProps<'button'>) {
+  const { toggleSmartSidebar } = useSmartSidebar()
 
   return (
     <button
       data-sidebar="rail"
       data-slot="sidebar-rail"
-      aria-label="Toggle Sidebar"
+      aria-label="Toggle SmartSidebar"
       tabIndex={-1}
-      onClick={toggleSidebar}
-      title="Toggle Sidebar"
+      onClick={toggleSmartSidebar}
+      title="Toggle SmartSidebar"
       className={cn(
-        'hover:after:bg-sidebar-border absolute inset-y-0 z-20 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] sm:flex',
+        'hover:after:bg-sidebar-border absolute inset-y-0 z-50 hidden w-4 -translate-x-1/2 transition-all ease-linear group-data-[side=left]:-right-4 group-data-[side=right]:left-0 after:absolute after:inset-y-0 after:left-1/2 after:w-[2px] sm:flex',
         'in-data-[side=left]:cursor-w-resize in-data-[side=right]:cursor-e-resize',
         '[[data-side=left][data-state=collapsed]_&]:cursor-e-resize [[data-side=right][data-state=collapsed]_&]:cursor-w-resize',
         'hover:group-data-[collapsible=offcanvas]:bg-sidebar group-data-[collapsible=offcanvas]:translate-x-0 group-data-[collapsible=offcanvas]:after:left-full',
@@ -302,7 +314,10 @@ function SidebarRail({ className, ...props }: React.ComponentProps<'button'>) {
   )
 }
 
-function SidebarInset({ className, ...props }: React.ComponentProps<'main'>) {
+function SmartSidebarInset({
+  className,
+  ...props
+}: React.ComponentProps<'main'>) {
   return (
     <main
       data-slot="sidebar-inset"
@@ -316,7 +331,7 @@ function SidebarInset({ className, ...props }: React.ComponentProps<'main'>) {
   )
 }
 
-function SidebarInput({
+function SmartSidebarInput({
   className,
   ...props
 }: React.ComponentProps<typeof Input>) {
@@ -330,7 +345,10 @@ function SidebarInput({
   )
 }
 
-function SidebarHeader({ className, ...props }: React.ComponentProps<'div'>) {
+function SmartSidebarHeader({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="sidebar-header"
@@ -341,7 +359,10 @@ function SidebarHeader({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-function SidebarFooter({ className, ...props }: React.ComponentProps<'div'>) {
+function SmartSidebarFooter({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="sidebar-footer"
@@ -352,7 +373,7 @@ function SidebarFooter({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-function SidebarSeparator({
+function SmartSidebarSeparator({
   className,
   ...props
 }: React.ComponentProps<typeof Separator>) {
@@ -366,7 +387,10 @@ function SidebarSeparator({
   )
 }
 
-function SidebarContent({ className, ...props }: React.ComponentProps<'div'>) {
+function SmartSidebarContent({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="sidebar-content"
@@ -380,7 +404,10 @@ function SidebarContent({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-function SidebarGroup({ className, ...props }: React.ComponentProps<'div'>) {
+function SmartSidebarGroup({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
   return (
     <div
       data-slot="sidebar-group"
@@ -391,7 +418,7 @@ function SidebarGroup({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
-function SidebarGroupLabel({
+function SmartSidebarGroupLabel({
   className,
   asChild = false,
   ...props
@@ -412,7 +439,7 @@ function SidebarGroupLabel({
   )
 }
 
-function SidebarGroupAction({
+function SmartSidebarGroupAction({
   className,
   asChild = false,
   ...props
@@ -435,7 +462,7 @@ function SidebarGroupAction({
   )
 }
 
-function SidebarGroupContent({
+function SmartSidebarGroupContent({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
@@ -449,7 +476,7 @@ function SidebarGroupContent({
   )
 }
 
-function SidebarMenu({ className, ...props }: React.ComponentProps<'ul'>) {
+function SmartSidebarMenu({ className, ...props }: React.ComponentProps<'ul'>) {
   return (
     <ul
       data-slot="sidebar-menu"
@@ -460,7 +487,10 @@ function SidebarMenu({ className, ...props }: React.ComponentProps<'ul'>) {
   )
 }
 
-function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
+function SmartSidebarMenuItem({
+  className,
+  ...props
+}: React.ComponentProps<'li'>) {
   return (
     <li
       data-slot="sidebar-menu-item"
@@ -493,7 +523,7 @@ const sidebarMenuButtonVariants = cva(
   },
 )
 
-function SidebarMenuButton({
+function SmartSidebarMenuButton({
   asChild = false,
   isActive = false,
   variant = 'default',
@@ -507,7 +537,7 @@ function SidebarMenuButton({
   tooltip?: string | React.ComponentProps<typeof TooltipContent>
 } & VariantProps<typeof sidebarMenuButtonVariants>) {
   const Comp = asChild ? Slot : 'button'
-  const { isMobile, state } = useSidebar()
+  const { isMobile, state } = useSmartSidebar()
 
   const button = (
     <Comp
@@ -543,7 +573,7 @@ function SidebarMenuButton({
   )
 }
 
-function SidebarMenuAction({
+function SmartSidebarMenuAction({
   className,
   asChild = false,
   showOnHover = false,
@@ -575,7 +605,7 @@ function SidebarMenuAction({
   )
 }
 
-function SidebarMenuBadge({
+function SmartSidebarMenuBadge({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
@@ -597,7 +627,7 @@ function SidebarMenuBadge({
   )
 }
 
-function SidebarMenuSkeleton({
+function SmartSidebarMenuSkeleton({
   className,
   showIcon = false,
   ...props
@@ -635,7 +665,10 @@ function SidebarMenuSkeleton({
   )
 }
 
-function SidebarMenuSub({ className, ...props }: React.ComponentProps<'ul'>) {
+function SmartSidebarMenuSub({
+  className,
+  ...props
+}: React.ComponentProps<'ul'>) {
   return (
     <ul
       data-slot="sidebar-menu-sub"
@@ -650,7 +683,7 @@ function SidebarMenuSub({ className, ...props }: React.ComponentProps<'ul'>) {
   )
 }
 
-function SidebarMenuSubItem({
+function SmartSidebarMenuSubItem({
   className,
   ...props
 }: React.ComponentProps<'li'>) {
@@ -664,7 +697,7 @@ function SidebarMenuSubItem({
   )
 }
 
-function SidebarMenuSubButton({
+function SmartSidebarMenuSubButton({
   asChild = false,
   size = 'md',
   isActive = false,
@@ -697,28 +730,28 @@ function SidebarMenuSubButton({
 }
 
 export {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupAction,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarInput,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuBadge,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarMenuSkeleton,
-  SidebarMenuSub,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
-  SidebarProvider,
-  SidebarRail,
-  SidebarSeparator,
-  SidebarTrigger,
-  useSidebar,
+  SmartSidebar,
+  SmartSidebarContent,
+  SmartSidebarFooter,
+  SmartSidebarGroup,
+  SmartSidebarGroupAction,
+  SmartSidebarGroupContent,
+  SmartSidebarGroupLabel,
+  SmartSidebarHeader,
+  SmartSidebarInput,
+  SmartSidebarInset,
+  SmartSidebarMenu,
+  SmartSidebarMenuAction,
+  SmartSidebarMenuBadge,
+  SmartSidebarMenuButton,
+  SmartSidebarMenuItem,
+  SmartSidebarMenuSkeleton,
+  SmartSidebarMenuSub,
+  SmartSidebarMenuSubButton,
+  SmartSidebarMenuSubItem,
+  SmartSidebarProvider,
+  SmartSidebarRail,
+  SmartSidebarSeparator,
+  SmartSidebarTrigger,
+  useSmartSidebar,
 }

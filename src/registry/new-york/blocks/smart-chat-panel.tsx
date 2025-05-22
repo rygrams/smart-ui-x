@@ -1,28 +1,30 @@
 'use client'
 
-import React from 'react'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/registry/new-york/ui/dialog'
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/registry/new-york/ui/sheet'
 import { Button } from '@/registry/new-york/ui/button'
 import { Icons } from '@/registry/new-york/blocks/smart-icons'
+import React from 'react'
 import { Textarea } from '@/registry/new-york/ui/textarea'
 import {
   availableTasks,
   ResultSelection,
   TaskSelection,
 } from '@/registry/new-york/blocks/smart-selection'
-import { useXtartapp } from '@/registry/new-york/lib/smartui-api.hook'
-import { TaskEnpoints } from '@/registry/new-york/lib/smartui-api.utils'
+import { useXtartapp } from '../lib/smartui-api.hook'
+import { TaskEnpoints } from '../lib/smartui-api.utils'
 import { LoaderIcon } from 'lucide-react'
+import { cn } from '~/lib/utils'
+import { getPositionClasses, TriggerPosition } from '../lib/smartui.utils'
 
-function SmartDialogTrigger() {
+export function DefaultTrigger() {
   return (
     <span className="flex items-center gap-1 text-xs text-purple-950 dark:text-purple-500">
       <Icons.Companion className="size-4" />
@@ -31,39 +33,58 @@ function SmartDialogTrigger() {
   )
 }
 
-type SmartDialog = React.ComponentProps<typeof Dialog> & {
+export type SmartChatPanel = React.ComponentProps<typeof Sheet> & {
+  trigger?: React.ReactNode
   tasks?: TaskEnpoints[]
   defaultValue?: string
   context?: string
   onSelect?: (value: string) => void
+  side?: 'top' | 'right' | 'bottom' | 'left'
+  triggerPosition?: TriggerPosition
 }
 
-function SmartDialog({ defaultValue, onSelect, context, tasks }: SmartDialog) {
+export function SmartChatPanel({
+  trigger,
+  defaultValue,
+  context,
+  tasks,
+  side = 'right',
+  triggerPosition = { vertical: 'bottom', horizontal: 'end' },
+}: SmartChatPanel) {
   const [open, setOpen] = React.useState(false)
   const [taskId, setTaskId] = React.useState<TaskEnpoints | undefined>()
   const [selectedValue, setSelectedValue] = React.useState('')
   const [text, setText] = React.useState(defaultValue || '')
+
   const { mutate, isLoading, data } = useXtartapp(taskId)
 
+  const positionClasses = getPositionClasses(
+    triggerPosition.vertical,
+    triggerPosition.horizontal,
+  )
+
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <Sheet open={open} onOpenChange={setOpen}>
+      <SheetTrigger asChild>
         <Button
           variant={'ghost'}
-          className="cursor-pointer p-0 h-auto w-auto min-w-2"
+          className={cn(
+            'cursor-pointer p-2 h-auto w-auto min-w-2 rounded-full shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow',
+            positionClasses,
+          )}
         >
-          <SmartDialogTrigger />
+          {trigger ?? <DefaultTrigger />}
         </Button>
-      </DialogTrigger>
-      <DialogContent className="w-full sm:max-w-xl">
-        <DialogHeader>
-          <DialogTitle>
+      </SheetTrigger>
+      <SheetContent side={side} className="w-full sm:max-w-md p-4 h-full">
+        <SheetHeader>
+          <SheetTitle>
             <span className="flex items-center gap-2">
-              <Icons.Companion className="size-6" />
+              <Icons.Companion className="size-5 text-cyan-600" />
               <h6 className="text-base">AI Companion</h6>
             </span>
-          </DialogTitle>
-          <DialogDescription>
+          </SheetTitle>
+          <SheetDescription>
             <span className="text-sm text-gray-800 dark:text-gray-300">
               Jumpstart collaboration with your AI companion.
             </span>
@@ -71,9 +92,27 @@ function SmartDialog({ defaultValue, onSelect, context, tasks }: SmartDialog) {
             <span className="text-xs text-muted-foreground">
               Ask questions, get suggestions, and receive feedback on your code.
             </span>
-          </DialogDescription>
-        </DialogHeader>
-        <div>
+          </SheetDescription>
+        </SheetHeader>
+
+        <div className="flex-1 overflow-hidden flex flex-col">
+          <TaskSelection
+            tasks={tasks}
+            onSelectionChange={(value) => {
+              if (value === taskId) setTaskId(undefined)
+              else setTaskId(value as TaskEnpoints)
+            }}
+          />
+          {taskId ? (
+            <p className="text-xs text-gray-800 dark:text-gray-300 mt-1">
+              {availableTasks.find((task) => task.id === taskId)?.description}
+            </p>
+          ) : (
+            <p className="text-xs text-red-500 mt-1">
+              Select a task to get started.
+            </p>
+          )}
+
           {isLoading && (
             <>
               <div className="flex justify-center items-center scale-50">
@@ -87,48 +126,15 @@ function SmartDialog({ defaultValue, onSelect, context, tasks }: SmartDialog) {
             </>
           )}
 
-          <div className="overflow-y-auto h-[40vh]">
+          <div className="flex-1 overflow-y-auto max-h-[60vh] scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700 scrollbar-track-gray-100 dark:scrollbar-track-gray-800">
             {data && !isLoading && (
-              <>
-                <p className="text-sm font-medium text-gray-800">
-                  Result for {taskId}
-                </p>
-                <div className="h-px w-full bg-black/5 mb-4 mt-1" />
-                <ResultSelection
-                  onSelect={(value) => {
-                    if (value === selectedValue) setSelectedValue('')
-                    else setSelectedValue(value)
-                  }}
-                  results={Array.isArray(data) ? data : [data]}
-                />
-                <div className="h-px w-full bg-black/5 my-4" />
-              </>
-            )}
-            {!data && !isLoading && (
-              <div className="size-full flex items-center justify-center">
-                <p className="text-sm w-10/12 text-center text-muted-foreground">
-                  Select a task and provide your input and let your AI companion
-                  make the <strong>JOB</strong> for you.
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="flex items-center justify-between">
-            <TaskSelection
-              tasks={tasks}
-              onSelectionChange={(value) => {
-                setTaskId(value || undefined)
-              }}
-            />
-            {taskId ? (
-              <p className="text-xs text-gray-800 dark:text-gray-300">
-                {availableTasks.find((task) => task.id === taskId)?.description}
-              </p>
-            ) : (
-              <p className="text-xs text-red-500">
-                Select a task to get started.
-              </p>
+              <ResultSelection
+                onSelect={(value) => {
+                  if (value === selectedValue) setSelectedValue('')
+                  else setSelectedValue(value)
+                }}
+                results={Array.isArray(data) ? data : [data]}
+              />
             )}
           </div>
 
@@ -153,10 +159,11 @@ function SmartDialog({ defaultValue, onSelect, context, tasks }: SmartDialog) {
               }
             }}
             rows={2}
-            className="max-h-24"
+            className="mt-8 max-h-32"
           />
         </div>
-        <DialogFooter>
+
+        <SheetFooter className="px-0">
           <Button
             disabled={isLoading || !taskId}
             onClick={() => {
@@ -172,24 +179,10 @@ function SmartDialog({ defaultValue, onSelect, context, tasks }: SmartDialog) {
             {isLoading && <LoaderIcon className="mr-2 animate-spin" />}
             Submit
           </Button>
-          {selectedValue && (
-            <Button
-              disabled={isLoading}
-              variant={'default'}
-              className="bg-green-600 hover:bg-green-700 cursor-pointer"
-              onClick={() => {
-                onSelect?.(selectedValue)
-                setOpen(false)
-                setSelectedValue('')
-              }}
-            >
-              Accept
-            </Button>
-          )}
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
   )
 }
 
-export { SmartDialogTrigger, SmartDialog }
+SmartChatPanel.displayName = 'SmartChatPanel'

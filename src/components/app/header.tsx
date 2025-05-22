@@ -9,7 +9,7 @@ import { MobileNav } from './mobile-nav'
 
 export function AppHeader() {
   return (
-    <header className="border-grid sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-border/80 dark:border-border border-dashed">
+    <header className="border-grid sticky top-0 z-20 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-border/80 dark:border-border border-dashed">
       <div className="container-wrapper">
         <div className="container flex h-14 items-center">
           <MainNav />
