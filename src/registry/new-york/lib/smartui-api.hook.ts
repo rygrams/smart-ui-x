@@ -1,12 +1,5 @@
-import useSWR from 'swr'
-import type { TaskEnpoints } from '~/registry/new-york/lib/smartui-api.utils'
-
-interface UseXtartappOptions {
-  taskId: TaskEnpoints
-  input?: string
-  context?: string
-  enabled?: boolean
-}
+import useSWRMutation from 'swr/mutation'
+import type { TaskEnpoints } from '@/registry/new-york/lib/smartui-api.utils'
 
 type ApiResponse = string | string[]
 
@@ -26,26 +19,16 @@ const fetcher = async (
   return data as ApiResponse
 }
 
-export function useXtartapp({
-  taskId,
-  input = '',
-  context = '',
-}: UseXtartappOptions) {
-  const shouldFetch = input.length > 0
-
-  const { data, error, isLoading, mutate } = useSWR(
-    shouldFetch ? [`/api/xtartapp/${taskId}`, { input, context }] : null,
+export function useXtartapp(taskId: TaskEnpoints | undefined) {
+  const { data, error, isMutating, trigger } = useSWRMutation(
+    `/api/xtartapp/${taskId}`,
     fetcher,
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    },
   )
 
   return {
     data,
     error,
-    isLoading,
-    mutate,
+    isLoading: isMutating,
+    mutate: trigger,
   }
 }

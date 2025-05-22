@@ -1,18 +1,27 @@
-export type TaskEnpoints = 'suggestions' | 'correction' | 'normalization'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+export type TaskEnpoints =
+  | 'suggestions'
+  | 'correction'
+  | 'normalization'
+  | 'prompt'
+  | 'explanation'
 
 /*  API ENDPOINTS UTILS   */
 export const routesMap = {
   suggestions: 'text/suggestions',
   correction: 'text/correction',
   normalization: 'text/normalization',
+  prompt: 'text/prompt',
+  explanation: 'text/explanation',
 }
 
 export const getPayload = (task: TaskEnpoints) =>
   ({
     suggestions: (text: string, context: string) => ({
       text,
-      context,
+      intent: context,
       language: 'auto',
+      limit: 5,
     }),
     correction: (text: string) => ({
       text,
@@ -20,44 +29,41 @@ export const getPayload = (task: TaskEnpoints) =>
     }),
     normalization: (text: string) => ({
       text,
-      context: 'auto',
+      language: 'auto',
+    }),
+    prompt: (text: string) => ({
+      text,
+      language: 'auto',
+    }),
+    explanation: (text: string) => ({
+      text,
+      complexity: 'intermediate',
       language: 'auto',
     }),
   })[task]
 
 export const getResults = (task: TaskEnpoints) => {
   return {
-    suggestions: (response: SuggestionResponse) => {
-      return response.data?.suggestions.map((item) => item.suggestion) || []
+    suggestions: ({ data }: ApiResponse) => {
+      return (
+        data?.suggestions.map((item: any) => item.suggestion).slice(1, 5) || []
+      )
     },
-    correction: (response: CorrectionResponse) => {
-      return response.data?.correctedText || ''
+    correction: ({ data }: ApiResponse) => {
+      return [data?.correctedText || '']
     },
-    normalization: (response: NormalizationResponse) => {
-      return response.data?.normalizedText || ''
+    normalization: ({ data }: ApiResponse) => {
+      return [data?.normalizedText || '']
+    },
+    prompt: ({ data }: ApiResponse) => {
+      return [data?.response || '']
+    },
+    explanation: ({ data }: ApiResponse) => {
+      return data?.explanations || []
     },
   }[task]
 }
 
-/*   TYPES   */
-type SuggestionResponse = {
-  data: {
-    suggestions: {
-      suggestion: string
-      score: number
-    }[]
-  }
-}
-
-type CorrectionResponse = {
-  data: {
-    originalText: string
-    correctedText: string
-  }
-}
-
-type NormalizationResponse = {
-  data: {
-    normalizedText: string
-  }
+type ApiResponse = {
+  data: any
 }

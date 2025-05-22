@@ -89,7 +89,6 @@ describe('DocPager', () => {
     const { container } = render(<DocPager doc={doc} />)
 
     const divSelector = container.querySelector('.custom-class')
-    console.log(container.innerHTML)
 
     expect(divSelector).toBeDefined()
     expect(divSelector?.getAttribute('data-testid')).toBe('custom-div')
