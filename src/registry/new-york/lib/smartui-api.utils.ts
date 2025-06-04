@@ -5,6 +5,7 @@ export type TaskEnpoints =
   | 'normalization'
   | 'prompt'
   | 'explanation'
+  | 'translation'
 
 /*  API ENDPOINTS UTILS   */
 export const routesMap = {
@@ -13,6 +14,7 @@ export const routesMap = {
   normalization: 'text/normalization',
   prompt: 'text/prompt',
   explanation: 'text/explanation',
+  translation: 'text/translation',
 }
 
 export const getPayload = (task: TaskEnpoints) =>
@@ -40,6 +42,11 @@ export const getPayload = (task: TaskEnpoints) =>
       complexity: 'intermediate',
       language: 'auto',
     }),
+    translation: (text: string, context: string) => ({
+      text,
+      intent: context,
+      language: 'auto',
+    }),
   })[task]
 
 export const getResults = (task: TaskEnpoints) => {
@@ -60,6 +67,9 @@ export const getResults = (task: TaskEnpoints) => {
     },
     explanation: ({ data }: ApiResponse) => {
       return data?.explanations || []
+    },
+    translation: ({ data }: ApiResponse) => {
+      return [data?.translatedText || '']
     },
   }[task]
 }

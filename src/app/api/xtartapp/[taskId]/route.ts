@@ -22,6 +22,7 @@ export async function POST(
     body: JSON.stringify(payload),
   })
   const data = await res.json()
+  console.log('Response from xtartapp:', data)
 
   return Response.json({ data: getResults(taskId)(data) })
 }
